@@ -1,0 +1,136 @@
+{
+  "flashcards": [
+    {
+      "front": "Anaranjado",
+      "back": "Orange",
+      "id": 3,
+      "deckId": 1
+    },
+    {
+      "front": "Verde",
+      "back": "Green",
+      "id": 34,
+      "deckId": 1
+    },
+    {
+      "front": "Amarillo",
+      "back": "Yellow",
+      "id": 239,
+      "deckId": 1
+    },
+    {
+      "id": "lbztc0s4",
+      "front": "el niño",
+      "back": "child",
+      "deckId": 3
+    },
+    {
+      "id": "lbztio2l",
+      "front": "la ciudad",
+      "back": "city",
+      "deckId": 3
+    },
+    {
+      "id": "ag4gag",
+      "front": "la carro",
+      "back": "car",
+      "deckId": 3
+    },
+    {
+      "id": "lcksinnf",
+      "front": "Pizza",
+      "back": "Pie",
+      "deckId": "lcks0h1t"
+    },
+    {
+      "id": "lcksl5q2",
+      "front": "Rojo",
+      "back": "Red",
+      "deckId": "1"
+    },
+    {
+      "id": "lckuj9b5",
+      "front": "2",
+      "back": "",
+      "deckId": "lcks0h1t"
+    },
+    {
+      "id": "lckvo9rc",
+      "front": "1",
+      "back": "2",
+      "deckId": "lcks0h1t"
+    },
+    {
+      "id": "lckvo9rd",
+      "front": "43",
+      "back": "5",
+      "deckId": "lcks0h1t"
+    },
+    {
+      "id": "lckwtsmu",
+      "front": "Cheese",
+      "back": "good",
+      "deckId": "lcksozlv"
+    },
+    {
+      "id": "lckwtsmv",
+      "front": "olives",
+      "back": "Great!",
+      "deckId": "lcksozlv"
+    },
+    {
+      "id": "lckwtsmw",
+      "front": "calzone",
+      "back": "lo-cal-cal-zone-zone",
+      "deckId": "lcksozlv"
+    },
+    {
+      "id": "lcl22mym",
+      "front": "a",
+      "back": "b",
+      "deckId": "lcl22iu2"
+    },
+    {
+      "id": "lcl2ucvl",
+      "front": "calzone?",
+      "back": "Yest!",
+      "deckId": "lcksozlv"
+    },
+    {
+      "id": "lclu3uhn",
+      "front": "asdf",
+      "back": "asdf",
+      "deckId": "3"
+    }
+  ],
+  "decks": [
+    {
+      "id": 1,
+      "name": "Spanish Colors"
+    },
+    {
+      "id": 3,
+      "name": "Spanish Vocabulary"
+    },
+    {
+      "id": "lcks0h1t",
+      "name": "asdf"
+    },
+    {
+      "id": "lcksozlv",
+      "name": "pizza"
+    },
+    {
+      "id": "lckx8swv",
+      "name": "empty deck"
+    },
+    {
+      "id": "lcl22iu2",
+      "name": "One card"
+    },
+    {
+      "id": "lcl2ukzi",
+      "name": "Booo"
+    }
+  ]
+}
