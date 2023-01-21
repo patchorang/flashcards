@@ -9,7 +9,6 @@ function RemoveDeckModal({ onClose }) {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log("Removing deck", id);
     removeDeck(id);
     onClose();
   };

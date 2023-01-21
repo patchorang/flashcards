@@ -21,6 +21,7 @@ function EditDeck() {
   const [addCard] = useAddFlashcardMutation();
   const [removeCard] = useRemoveFlashcardMutation();
   const [cardsToRemoveUponCleanup, setCardsToRemoveUponCleanup] = useState([]);
+  const [savingChanges, setSavingChanges] = useState(false);
 
   const { cardValues } = useSelector(
     (state) => state.flashcardManager.editCardPage
@@ -29,14 +30,14 @@ function EditDeck() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(updateEditCardPage((deckData && deckData.flashcards) || []));
-  }, [deckData]);
-
-  useEffect(() => {
-    if (cardValues.length === 0) {
+    if (cardValues && cardValues.length === 0) {
       addCardToTempStorage();
     }
   });
+
+  useEffect(() => {
+    dispatch(updateEditCardPage((deckData && deckData.flashcards) || []));
+  }, [deckData]);
 
   const updateCardFront = (event, cardId) => {
     let newFront = event.target.value;
@@ -96,6 +97,7 @@ function EditDeck() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    setSavingChanges(true);
     for (const id of cardsToRemoveUponCleanup) {
       await removeCard(id);
     }
@@ -111,6 +113,7 @@ function EditDeck() {
         }
       }
     }
+    setSavingChanges(false);
     navigate(`/decks/${deckId}`);
   };
 
@@ -122,6 +125,12 @@ function EditDeck() {
   let emptyState = (
     <div className="w-full text-center text-l font-medium text-slate-500 mb-4 drop-shadow-lg bg-slate-50 p-4 py-16 rounded-xl">
       What!? You don't have any cards? That's crazy.
+    </div>
+  );
+
+  let loadingState = (
+    <div className="w-full text-center text-l font-medium text-slate-500 mb-4 drop-shadow-lg bg-slate-50 p-4 py-16 rounded-xl">
+      Saving deck...
     </div>
   );
 
@@ -170,8 +179,12 @@ function EditDeck() {
     </Link>
   );
 
-  const renderedDisplay =
-    cardValues && cardValues.length > 0 ? renderedEditor : emptyState;
+  let renderedDisplay = emptyState;
+  if (savingChanges) {
+    renderedDisplay = loadingState;
+  } else if (cardValues && cardValues.length > 0) {
+    renderedDisplay = renderedEditor;
+  }
 
   if (cardValues) {
     renderedDeck = (

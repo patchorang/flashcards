@@ -1,8 +1,4 @@
 import { useState } from "react";
-// import {
-//   useGetFlashcardsByDeckIdQuery,
-//   useRemoveFlashcardMutation,
-// } from "../store/apis/flashcardsApi";
 import { useGetDeckByIdQuery } from "../store/apis/decksApi";
 import { useParams, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";

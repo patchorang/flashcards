@@ -42,7 +42,6 @@ export const flashcardsSlice = createSlice({
       state.newDeckForm.name = action.payload.name;
     },
     updateEditCardPage: (state, action) => {
-      console.log("updating with", action.payload);
       state.editCardPage.cardValues = action.payload;
     },
     updateDeckToRemove: (state, action) => {

@@ -47,8 +47,6 @@ export const decksApi = createApi({
         },
         invalidatesTags: ["Decks", "Flashcards"],
       }),
-      //TODO ADD THESE
-
       updateFlashcard: builder.mutation({
         query: (card) => {
           return {
