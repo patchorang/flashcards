@@ -65,7 +65,7 @@ function Deck() {
       {renderedCard}
       <div className="flex space-x-2">
         <Button onClick={() => navigate(`/decks/edit/${deckId}`)}>
-          Edit cards
+          Edit deck
         </Button>
       </div>
     </div>

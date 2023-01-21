@@ -22,6 +22,7 @@ function EditDeck() {
   const [removeCard] = useRemoveFlashcardMutation();
   const [cardsToRemoveUponCleanup, setCardsToRemoveUponCleanup] = useState([]);
   const [savingChanges, setSavingChanges] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
 
   const { cardValues } = useSelector(
     (state) => state.flashcardManager.editCardPage
@@ -93,28 +94,49 @@ function EditDeck() {
   const inputClasses =
     "flex-auto  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2";
 
+  const inputErrorClasses =
+    "flex-auto  bg-gray-50 border border-red-400 text-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-600 block p-2.5 mb-2";
+
+  const getInputClasses = (value) => {
+    if (showValidation && value === "") {
+      return inputErrorClasses;
+    }
+    return inputClasses;
+  };
+
   let renderedDeck = <div>Loading cards...</div>;
+
+  const isValid = () => {
+    const allValid = cardValues.reduce(
+      (val, card) => val && card.front !== "" && card.back !== "",
+      true
+    );
+    return allValid;
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setSavingChanges(true);
-    for (const id of cardsToRemoveUponCleanup) {
-      await removeCard(id);
-    }
+    setShowValidation(true);
+    if (isValid()) {
+      setSavingChanges(true);
+      for (const id of cardsToRemoveUponCleanup) {
+        await removeCard(id);
+      }
 
-    for (const card of cardValues) {
-      if (card.front || card.back) {
-        if (card.id) {
-          updateCard(card);
-        } else {
-          let newCard = { ...card };
-          delete newCard.tempId;
-          await addCard(newCard);
+      for (const card of cardValues) {
+        if (card.front || card.back) {
+          if (card.id) {
+            updateCard(card);
+          } else {
+            let newCard = { ...card };
+            delete newCard.tempId;
+            await addCard(newCard);
+          }
         }
       }
+      setSavingChanges(false);
+      navigate(`/decks/${deckId}`);
     }
-    setSavingChanges(false);
-    navigate(`/decks/${deckId}`);
   };
 
   const handleAddNewCard = (e) => {
@@ -151,12 +173,12 @@ function EditDeck() {
         <div key={card.id || card.tempId} className="flex space-x-2">
           <input
             autoFocus
-            className={inputClasses}
+            className={getInputClasses(card.front)}
             value={card.front}
             onChange={(e) => updateCardFront(e, card.id || card.tempId)}
           ></input>
           <input
-            className={inputClasses}
+            className={getInputClasses(card.back)}
             value={card.back}
             onChange={(e) => updateCardBack(e, card.id || card.tempId)}
           ></input>
@@ -185,6 +207,10 @@ function EditDeck() {
   } else if (cardValues && cardValues.length > 0) {
     renderedDisplay = renderedEditor;
   }
+
+  const handleDeckName = (e) => {
+    const name = e.target.value;
+  };
 
   if (cardValues) {
     renderedDeck = (
