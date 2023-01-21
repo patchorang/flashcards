@@ -1,8 +1,8 @@
 import { useState } from "react";
-import {
-  useGetFlashcardsByDeckIdQuery,
-  useRemoveFlashcardMutation,
-} from "../store/apis/flashcardsApi";
+// import {
+//   useGetFlashcardsByDeckIdQuery,
+//   useRemoveFlashcardMutation,
+// } from "../store/apis/flashcardsApi";
 import { useGetDeckByIdQuery } from "../store/apis/decksApi";
 import { useParams, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -13,7 +13,6 @@ function Deck() {
   const deckId = useParams().id;
   const navigate = useNavigate();
   const { data: deckData } = useGetDeckByIdQuery(deckId);
-  const { data, error, isLoading } = useGetFlashcardsByDeckIdQuery(deckId);
 
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
@@ -24,7 +23,7 @@ function Deck() {
   };
 
   const toNextCard = () => {
-    if (currentCardIndex < data.length - 1) {
+    if (currentCardIndex < deckData.flashcards.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1);
     }
   };
@@ -45,10 +44,10 @@ function Deck() {
   );
 
   let renderedCard = "Loading cards...";
-  if (data && data.length > 0) {
+  if (deckData && deckData.flashcards && deckData.flashcards.length > 0) {
     renderedCard = (
       <FlashCard
-        card={data[currentCardIndex]}
+        card={deckData.flashcards[currentCardIndex]}
         toNextCard={toNextCard}
         toPreviousCard={toPreviousCard}
       />

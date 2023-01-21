@@ -1,24 +1,22 @@
 import { SlTrash } from "react-icons/sl";
 import uniqid from "uniqid";
 import { useState } from "react";
-import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useGetDeckByIdQuery } from "../store/apis/decksApi";
 import {
-  useGetFlashcardsByDeckIdQuery,
   useUpdateFlashcardMutation,
   useAddFlashcardMutation,
   useRemoveFlashcardMutation,
-} from "../store/apis/flashcardsApi";
+} from "../store/apis/decksApi";
 import { updateEditCardPage } from "../store/slices/flashcardsSlice";
 import { useEffect } from "react";
 import Button from "./Button";
 
-function EditDeck({ history }) {
+function EditDeck() {
   const deckId = useParams().id;
   const navigate = useNavigate();
   const { data: deckData } = useGetDeckByIdQuery(deckId);
-  const { data } = useGetFlashcardsByDeckIdQuery(deckId);
   const [updateCard] = useUpdateFlashcardMutation();
   const [addCard] = useAddFlashcardMutation();
   const [removeCard] = useRemoveFlashcardMutation();
@@ -31,17 +29,20 @@ function EditDeck({ history }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(updateEditCardPage(data || []));
-    if (cardValues.length == 0) {
+    dispatch(updateEditCardPage((deckData && deckData.flashcards) || []));
+  }, [deckData]);
+
+  useEffect(() => {
+    if (cardValues.length === 0) {
       addCardToTempStorage();
     }
-  }, [data]);
+  });
 
   const updateCardFront = (event, cardId) => {
     let newFront = event.target.value;
     let newData = [...cardValues];
     var foundIndex = newData.findIndex(
-      (card) => card.id === cardId || card.tempId == cardId
+      (card) => card.id === cardId || card.tempId === cardId
     );
     newData[foundIndex] = { ...newData[foundIndex], front: newFront };
     dispatch(updateEditCardPage(newData));
@@ -51,7 +52,7 @@ function EditDeck({ history }) {
     let newBack = event.target.value;
     let newData = [...cardValues];
     var foundIndex = newData.findIndex(
-      (card) => card.id === cardId || card.tempId == cardId
+      (card) => card.id === cardId || card.tempId === cardId
     );
     newData[foundIndex] = { ...newData[foundIndex], back: newBack };
     dispatch(updateEditCardPage(newData));
@@ -77,38 +78,40 @@ function EditDeck({ history }) {
     dispatch(updateEditCardPage(newData));
   };
 
+  const addCardToTempStorage = () => {
+    let newData = [...cardValues];
+    newData.push({
+      front: "",
+      back: "",
+      tempId: uniqid(),
+      deckId: deckId,
+    });
+    dispatch(updateEditCardPage(newData));
+  };
+
   const inputClasses =
     "flex-auto  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2";
 
   let renderedDeck = <div>Loading cards...</div>;
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    cardsToRemoveUponCleanup.forEach((id) => removeCard(id));
-    setCardsToRemoveUponCleanup([]);
-    cardValues.forEach((card) => {
+    for (const id of cardsToRemoveUponCleanup) {
+      await removeCard(id);
+    }
+
+    for (const card of cardValues) {
       if (card.front || card.back) {
         if (card.id) {
           updateCard(card);
         } else {
           let newCard = { ...card };
           delete newCard.tempId;
-          addCard(newCard);
+          await addCard(newCard);
         }
       }
-    });
+    }
     navigate(`/decks/${deckId}`);
-  };
-
-  const addCardToTempStorage = () => {
-    let newData = [...cardValues];
-    newData.push({
-      front: "",
-      back: "",
-      deckId: deckId,
-      tempId: uniqid(),
-    });
-    dispatch(updateEditCardPage(newData));
   };
 
   const handleAddNewCard = (e) => {

@@ -4,14 +4,12 @@ import { useDispatch } from "react-redux";
 import { updateDeckToRemove } from "../store/slices/flashcardsSlice";
 import { useNavigate } from "react-router-dom";
 import { useGetDecksQuery } from "../store/apis/decksApi";
-import { useGetFlashcardsQuery } from "../store/apis/flashcardsApi";
 import AddDeckModal from "./AddDeckModal";
 import RemoveDeckModal from "./RemoveDeckModal";
 import Button from "./Button";
 
 function DeckList() {
   const { data, error, isLoading } = useGetDecksQuery();
-  const { data: allFlashcards } = useGetFlashcardsQuery();
   const [showNewDeckForm, setShowNewDeckForm] = useState(false);
   const [showRemoveDeckModal, setShowRemoveDeckModal] = useState(false);
   const navigate = useNavigate();
@@ -38,12 +36,6 @@ function DeckList() {
     </div>
   );
 
-  const getNumFlashcardsForDeckWithId = (id) => {
-    return (
-      allFlashcards && allFlashcards.filter((card) => card.deckId === id).length
-    );
-  };
-
   if (data && data.length > 0) {
     renderedDecks = data.map((deck) => {
       return (
@@ -55,10 +47,8 @@ function DeckList() {
           <div>
             <div className="text-xl font-bold pt-2 pl-4">{deck.name}</div>
             <div className="text-sm font-medium text-slate-500 pl-4 pb-2 ">
-              {getNumFlashcardsForDeckWithId(deck.id)}{" "}
-              {getNumFlashcardsForDeckWithId(deck.id) == 1
-                ? "flashcard"
-                : "flashcards"}
+              {deck.flashcards.length}
+              {deck.flashcards.length == 1 ? " flashcard" : " flashcards"}
             </div>
           </div>
 
